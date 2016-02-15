@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import patterns, url, include
 
 from tastypie.api import Api
 
@@ -24,6 +24,7 @@ v1_api.register(library.SuiteResource())
 v1_api.register(library.CaseSelectionResource())
 v1_api.register(library.SuiteCaseResource())
 v1_api.register(library.CaseVersionSelectionResource())
+v1_api.register(library.CaseVersionSearchResource())
 v1_api.register(environments.ProfileResource())
 v1_api.register(environments.EnvironmentResource())
 v1_api.register(environments.ElementResource())
@@ -37,4 +38,7 @@ v1_api.register(tags.TagResource())
 urlpatterns = patterns(
     "moztrap.view.api",
     url(r"", include(v1_api.urls)),
+    url(r"^speedy/caseselection/",
+        "speedy.caseselection",
+        name="caseselection"),
 )

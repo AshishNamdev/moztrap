@@ -1,8 +1,18 @@
 Release Notes
 =============
 
-Current - 1.4.11
-----------------
+Current
+-------
+
+master
+~~~~~~
+*release date - 5/7/15
+
+* Upgrade django to 1.6
+
+
+Previous
+--------
 
 Version 1.4.11
 ^^^^^^^^^^^^^
@@ -14,9 +24,6 @@ Version 1.4.11
   **and** depending on what you want.  Now there is a switch in advanced
   filtering to enable this.
 
-
-Previous
---------
 
 Version 1.4.10
 ^^^^^^^^^^^^^

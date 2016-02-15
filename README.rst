@@ -14,7 +14,7 @@ documentation in the `docs/` directory (or `read it online`_).
 To build and view an HTML version of the documentation::
 
     $ cd docs
-    $ pip install sphinx
+    $ pip install sphinx sphinxcontrib-httpdomain
     $ make html
     $ firefox _build/html/index.html
 
@@ -38,10 +38,16 @@ respectively.
 .. _moztrap-vendor-lib: https://github.com/mozilla/moztrap-vendor-lib
 
 Live Site
-=======
+=========
 you can see moztrap in action at
 
 
-[https://moztrap.mozilla.org](https://moztrap.mozilla.org) Live site
+`https://moztrap.mozilla.org`_ Live site
 
-[https://moztrap.allizom.org](https://moztrap.allizom.org) Stage site
+`https://moztrap.allizom.org`_ Stage site
+
+`https://moztrap-dev.allizom.org`_ Dev site
+
+.. _https://moztrap.mozilla.org: :https://moztrap.mozilla.org
+.. _https://moztrap.allizom.org: :https://moztrap.allizom.org
+.. _https://moztrap-dev.allizom.org: :https://moztrap-dev.allizom.org

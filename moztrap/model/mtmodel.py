@@ -11,11 +11,9 @@ from django.db import models, router
 from django.db.models.deletion import Collector
 from django.db.models.query import QuerySet
 from django.db.models.signals import class_prepared
+from django.core.cache import cache
 
 from model_utils import Choices
-
-from .core.auth import User
-
 
 
 class ConcurrencyError(Exception):
@@ -162,14 +160,14 @@ class MTModel(models.Model):
     """
     created_on = models.DateTimeField(db_index=True, default=utcnow)
     created_by = models.ForeignKey(
-        User, blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
+        'auth.User', blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
 
     modified_on = models.DateTimeField(db_index=True, default=utcnow)
     modified_by = models.ForeignKey(
-        User, blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
+        'auth.User', blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
     deleted_on = models.DateTimeField(db_index=True, blank=True, null=True)
     deleted_by = models.ForeignKey(
-        User, blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
+        'auth.User', blank=True, null=True, related_name="+", on_delete=models.SET_NULL)
 
     # for optimistic concurrency control
     cc_version = models.IntegerField(default=0)
@@ -181,6 +179,10 @@ class MTModel(models.Model):
     # ...but "objects", for use in most code, returns only not-deleted
     objects = MTManager(show_deleted=False)
 
+    @classmethod
+    def delete_modelfilter_choices_cache(cls, model):
+        cache_key = 'modelfilter-choices-%s' % (model._meta,)
+        cache.delete(cache_key)
 
     def save(self, *args, **kwargs):
         """
@@ -190,6 +192,8 @@ class MTModel(models.Model):
         out-of-date version is being saved.
 
         """
+        self.delete_modelfilter_choices_cache(self)
+
         if not kwargs.pop("notrack", False):
             user = kwargs.pop("user", None)
             now = utcnow()
@@ -351,7 +355,7 @@ class NotDeletedCountColumn(object):
             field = "{0}.{1}".format(table, field)
             deleted_on = "{0}.{1}".format(table, deleted_on)
         return "CASE WHEN {0} IS NULL THEN {1} ELSE NULL END".format(
-            deleted_on, field)
+           deleted_on, field), []
 
 
 
@@ -368,7 +372,7 @@ class TeamModel(models.Model):
 
     """
     has_team = models.BooleanField(default=False)
-    own_team = models.ManyToManyField(User, blank=True)
+    own_team = models.ManyToManyField('auth.User', blank=True)
 
 
     @property

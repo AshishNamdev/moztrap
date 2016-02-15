@@ -92,6 +92,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.messages.context_processors.messages",
     "session_csrf.context_processor",
     "moztrap.view.users.context_processors.browserid",
+    "moztrap.view.utils.context_processors.db_status",
+    "moztrap.view.utils.context_processors.google_analytics",
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -131,9 +133,12 @@ INSTALLED_APPS = [
     "django_browserid",
     "south",
     "preferences",
+    "raven.contrib.django.raven_compat",
+    "moztrap.model.auth",
+    "moztrap.model.environments",
     "moztrap.model.core",
     "moztrap.model.library",
-    "moztrap.model.environments",
+
     "moztrap.model.execution",
     "moztrap.model.attachments",
     "moztrap.model.tags",
@@ -199,7 +204,7 @@ INSTALLED_APPS += ["floppyforms"]
 
 INSTALLED_APPS += ["djangosecure"]
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 hours
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 90  # 90 days ~= 3 months
 SECURE_FRAME_DENY = True
 
 MINIMUM_PASSWORD_CHARS = 8
@@ -242,3 +247,13 @@ SITE_URL = "http://localhost:8000"
 BROWSERID_CREATE_USER = "moztrap.model.core.auth.browserid_create_user"
 
 USE_BROWSERID = True
+
+GOOGLE_ANALYTICS_ID = 'UA-49796218-15'
+
+# Enable CORS
+INSTALLED_APPS += ["corsheaders"]
+MIDDLEWARE_CLASSES += [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
+]
+CORS_ORIGIN_ALLOW_ALL = True

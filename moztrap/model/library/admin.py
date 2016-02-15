@@ -41,6 +41,7 @@ class CaseStepInline(MTTabularInline):
 
 class CaseTagInline(admin.TabularInline):
     model = models.CaseVersion.tags.through
+    raw_id_fields = ["tag"]
     extra = 0
 
 
@@ -51,10 +52,9 @@ class SuiteCaseInline(MTTabularInline):
 
 
 class CaseVersionAdmin(MTModelAdmin):
-    list_display = ["__unicode__", "productversion", "deleted_on"]
-    list_filter = ["productversion"]
+    list_display = ["__unicode__", "productversion", "deleted_on", "deleted_by"]
+    list_filter = ["envs_narrowed", "case__suites"]
     inlines = [CaseStepInline, CaseAttachmentInline, CaseTagInline]
-    filter_horizontal = ["environments"]
     fieldsets = [
         (
             None, {
@@ -62,17 +62,24 @@ class CaseVersionAdmin(MTModelAdmin):
                     "productversion",
                     ("case", "name", "status"),
                     "description",
-                    "environments",
+                    "envs_narrowed",
                     ]
                 }
             )
         ]
+    raw_id_fields = ["case", "tags", "productversion"]
+    actions = ["remove_env_narrowing"]
 
+
+    def remove_env_narrowing(self, request, queryset):
+        for row in queryset:
+            row.remove_env_narrowing()
+    remove_env_narrowing.short_description = "Remove environment narrowing"
 
 
 class CaseAdmin(MTModelAdmin):
-    list_display = ["__unicode__", "product", "deleted_on"]
-    list_filter = ["product", "deleted_on"]
+    list_display = ["__unicode__", "product", "deleted_on", "deleted_by"]
+    list_filter = ["product", "deleted_on", "suites"]
 
 
 

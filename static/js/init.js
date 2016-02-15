@@ -14,15 +14,15 @@ var MT = (function (MT, $) {
             closeLink: '.message'
         });
         $('input[placeholder], textarea[placeholder]').placeholder();
-        $('.multiselect').multiselect();
 
         // filtering.js
         // this creates all the filter drop-downs before any
         // customAutocomplete is set up.
         if (typeof FILTERS !== 'undefined') {
-            MT.renderFilterFields('#filter', FILTERS);
+            MT.renderFilterFields('#filterset', FILTERS);
         }
 
+        $('.multiselect').multiselect();
         $('#filter').customAutocomplete({
             textbox: '#text-filter',
             inputList: '.visual .filter-group:not(.keyword)',
@@ -192,7 +192,8 @@ var MT = (function (MT, $) {
         MT.populateMultiselectItems({
             container: '#suite-edit-form, #suite-add-form',
             trigger_field: '#id_product',
-            ajax_url_root: "/api/v1/caseselection/?format=json&limit=0",
+            // ajax_url_root: "/api/v1/caseselection/?format=json&limit=0",
+            ajax_url_root: "/api/speedy/caseselection/?format=json&limit=0",
             ajax_trigger_filter: "productversion__product",
             ajax_for_field: "case__suites",
             for_type: "suite",
@@ -261,6 +262,12 @@ var MT = (function (MT, $) {
 
         // owa.js
         MT.owa();
+
+        // googleanalytics.js
+        MT.googleAnalyticsAjax();
+
+        // general.js
+        MT.readOnlyMode();
 
     });
 
